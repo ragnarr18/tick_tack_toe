@@ -7,7 +7,7 @@ In this project we used
 To run the program:
 
 
-Server
+### Server
 
   cd ./serve/
   
@@ -15,7 +15,7 @@ Server
   
   npm start
 
-Client
+### Client
 
   cd ./client/
   
