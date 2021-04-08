@@ -5,11 +5,12 @@ In this project we used
 - css modules
 
 To run the program:
- -Server
+Server
   -cd ./serve/
   -npm install
   -npm start
- -Client
+
+Client
   -cd ./client/
   -npm install
   -npm start
