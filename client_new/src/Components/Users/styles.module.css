@@ -1,0 +1,9 @@
+.container {
+    background-color: rgba(83, 147, 172, 0.568);
+    height: fit-content;
+}
+
+.title {
+    font-size: xx-large;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}

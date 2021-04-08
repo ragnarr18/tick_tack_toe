@@ -1,0 +1,23 @@
+.container {
+    background-color: rgba(83, 147, 172, 0.568);
+    margin-left: 2%;
+}
+
+.title {
+    font-size: xx-large;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.match {
+        color:#f7f9fd;
+        /* font-weight: 5000; */
+        font-family: monospace;
+        font-size: large;
+        padding: 10px;
+        cursor: pointer;
+
+}
+
+.match:hover{
+    background-color: rgba(59, 59, 165, 0.637);
+}

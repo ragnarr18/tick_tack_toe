@@ -1,0 +1,20 @@
+.container {
+    background-color: #21252b;
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.username {
+    color: white;
+    align-self: center;
+    font-size: xxx-large;
+    font-family: monospace;
+}
+
+.leave {
+    align-self: center;
+    background-color:blueviolet;
+    font-size: xx-large;
+    cursor: pointer;
+}
