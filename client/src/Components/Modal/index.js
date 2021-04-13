@@ -7,7 +7,6 @@ const Modal = ({ isOpen, closeModel, children }) => ReactDOM.createPortal(
     <div className={styles["modal"]}>
     <div className={styles["exit"]} onClick={() => closeModel(false)} >&#x2716;</div>
     <div className={styles["container"]}>
-      {/* <div className={styles["children"]}>{children}</div> */}
       {children}
     </div>
     </div>,
