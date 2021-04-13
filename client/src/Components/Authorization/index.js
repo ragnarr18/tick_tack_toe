@@ -42,23 +42,6 @@ const withAuth = (OriginalComponent) => {
                 })
                 this.setState({render: true})
             }
-
-        // socket.emit('matches');
-        // socket.on('matches', async matches => {
-        //     await setAllMatches(matches.filter((m) => this.matchContainsUser(m)));
-        //     // this.setState({matches: matches.filter((m) => this.matchContainsUser(m))})
-        // })
-
-        // if(match.params.matchId){
-        //     await getCurrentMatch(match.params.matchId);
-        // }
-
-        // socket.on('new_match', async match => {
-        //     if(this.matchContainsUser(match)){
-        //         await setAllMatches([...matchState.matches, match]);
-        //         // await getCurrentMatch(match.matchId);
-        //     }
-        // })
         }
     
         componentWillUnmount(){
@@ -82,9 +65,7 @@ const withAuth = (OriginalComponent) => {
             else{
                 return(<React.Fragment> 
                     <Nav {...this.props} /> 
-                    {/* <Nav />  */}
                     <OriginalComponent {...this.props} /> 
-                    {/* <OriginalComponent  history ={this.props.history}/>  */}
                 </React.Fragment>
                 )
             }
@@ -93,16 +74,9 @@ const withAuth = (OriginalComponent) => {
     return NewComponent;
 }
 
-// const withAuthHoc = compose(
-//     connect(), withAuth
-// )
-
-// export default withAuthHoc;
 const mapStateToProps = ({ socket, session, matchState }) => ({ socket, session, matchState });
 
 const cmposedAuth = compose(
     connect(mapStateToProps, { addSession, getSession, removeSession, setAllMatches }),withAuth
 )
 export default cmposedAuth;
-// export default connect(mapStateToProps)(withAuth);
-// export default withAuth;

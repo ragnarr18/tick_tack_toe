@@ -10,6 +10,7 @@ const noAuth = (OriginalComponent) => {
             const sId = localStorage.getItem('s.id');
             const uId = localStorage.getItem('u.id');
             const username = localStorage.getItem('u.name');
+            
             //redirect if no session in place
             if(sId !== null){
                 const { socket, addSession, history } = this.props;
@@ -27,17 +28,9 @@ const noAuth = (OriginalComponent) => {
     }
     return NewComponent;
 }
-
-// const withAuthHoc = compose(
-//     connect(), withAuth
-// )
-
-// export default withAuthHoc;
 const mapStateToProps = ({ socket, session }) => ({ socket, session });
 
 const cmposedAuth = compose(
     connect(mapStateToProps, { addSession }),noAuth
 )
 export default cmposedAuth;
-// export default connect(mapStateToProps)(withAuth);
-// export default withAuth;

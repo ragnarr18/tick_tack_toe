@@ -25,7 +25,6 @@ class UserItem extends React.Component{
  
     render(){
         const { user } = this.props;
-        //make the curser a pointer
         return(
             <div>
                 <div onClick={() => this.openModal(true)} className={styles["user"]} >
@@ -42,11 +41,4 @@ class UserItem extends React.Component{
         )
     }
 }
-// const mapStateToProps = ({ matchs, socket, session }) => ({ matchs, socket, session });
-
 export default UserItem;
-// export default withAuth(connect(mapStateToProps, { getmatchs, addSession })(Users));
-
-
-// export default connect(mapStateToProps, { getmatchs, addSession })(withAuth(Users));
-// export default connect(mapStateToProps, { getmatchs, addSession })(withAuth(Users));

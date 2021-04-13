@@ -84,9 +84,4 @@ class Users extends React.Component{
     }
 }
 const mapStateToProps = ({ socket, session }) => ({ socket, session });
-
-// export default Users;
-// export default withAuth(connect(mapStateToProps, { getmatchs, addSession })(Users));
-
 export default connect(mapStateToProps)(Users);
-// export default connect(mapStateToProps, { getmatchs, addSession })(withAuth(Users));

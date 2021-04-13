@@ -54,15 +54,11 @@ class Dashboard extends React.Component{
         socket.on('matches', async matches => {
             console.log("the matches: ", matches);
             await setAllMatches(matches);
-            // this.setState({matches: matches.filter((m) => this.matchContainsUser(m))})
         })
 
         socket.on('new_match', async match => {
-            // if(this.matchContainsUser(match)){
                 console.log([...matchState.matches, match]);
                 await setAllMatches([...matchState.matches, match]);
-                // await getCurrentMatch(match.matchId);
-            // }
         })
 
         socket.on('game_challenge_declined', (fromUser) => {
@@ -103,7 +99,6 @@ class Dashboard extends React.Component{
         const { username } = session;
         return(
             <div className={styles["container"]}>
-                {/* <div>DASHBOARD!</div> */}
                 <Users users={users} username={username} history={history} />
                 <Matches matches={matchState.matches} username={username}  history={history} />
                 {challengeDeclined &&
