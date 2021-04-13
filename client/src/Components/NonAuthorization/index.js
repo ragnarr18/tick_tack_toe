@@ -7,18 +7,15 @@ import { addSession } from '../../Actions/sessionActions';
 const noAuth = (OriginalComponent) => {
     class NewComponent extends React.Component {
         componentDidMount(){
-            console.log("noauth didmount");
             const sId = localStorage.getItem('s.id');
             const uId = localStorage.getItem('u.id');
             const username = localStorage.getItem('u.name');
-            console.log("sid: ", sId);
             //redirect if no session in place
             if(sId !== null){
                 const { socket, addSession, history } = this.props;
                 socket.auth={username: username, sessionID: sId, userID: uId }
                 socket.connect();
                 socket.on('session', session => {
-                    console.log("adding session");
                     addSession(session);
                 })
                 history.replace("/dashboard")

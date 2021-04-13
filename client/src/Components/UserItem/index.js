@@ -20,7 +20,6 @@ class UserItem extends React.Component{
         const { user } = this.props;
         if(user.connected){
             this.setState({isOpen: status})
-            console.log("isOpen: ", this.state.isOpen, "status: ",status);
         }
     }
  
@@ -32,8 +31,8 @@ class UserItem extends React.Component{
                 <div onClick={() => this.openModal(true)} className={styles["user"]} >
                     <div className={styles["name"]} >{user.username}</div>
                      {user.connected === true 
-                    ? <div className={styles["status"]} > <i class="fa fa-circle" style={{color: 'lightgreen'}}  > online</i> </div> 
-                    : <div className={styles["status"] } ><i class="fa fa-circle" style={{color: 'darkred'}} > offline</i></div>} 
+                    ? <div className={styles["status"]} > <i className="fa fa-circle" style={{color: 'lightgreen'}}  > online</i> </div> 
+                    : <div className={styles["status"] } ><i className="fa fa-circle" style={{color: 'darkred'}} > offline</i></div>} 
                     </div>
                 <UserModal isOpen={this.state.isOpen} closeModel={() => this.openModal(false)} >
                     <div>Would you like to play a game with user {user.username}?</div>

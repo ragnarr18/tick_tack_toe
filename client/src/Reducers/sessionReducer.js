@@ -9,9 +9,13 @@ export default function sessionReducer(state={}, action){
             localStorage.setItem('u.name', username);
             return action.payload;
         case constants.REMOVE_SESSION:
-            console.log("clearing localstorage");
             localStorage.clear();
             return action.payload;
+        case constants.GET_SESSION:
+            const sId = localStorage.getItem('s.id');
+            const uId = localStorage.getItem('u.id');
+            const uName = localStorage.getItem('u.name');
+            return ({sessionID: sId, userID: uId, username: uName});
         default: return state;
     }
 }

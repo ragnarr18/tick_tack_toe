@@ -1,2 +1,5 @@
 export const ADD_SESSION = 'ADD_SESSION';
 export const REMOVE_SESSION = 'REMOVE_SESSION';
+export const GET_SESSION = 'GET_SESSION';
+export const GET_CURRENT_MATCH = 'GET_CURRENT_MATCH';
+export const SET_ALL_MATCHES = 'SET_ALL_MATCHES';

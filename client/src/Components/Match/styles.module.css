@@ -1,0 +1,13 @@
+.GameOver {
+    font-size: xxx-large;
+    font-family: monospace;
+    padding: 15xp;
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 30%;
+    /* align-self: center; */
+    padding: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px ;
+    background-color: red;
+}

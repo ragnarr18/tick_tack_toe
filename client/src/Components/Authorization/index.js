@@ -1,7 +1,10 @@
 import React from 'react';
-import { compose } from 'redux';
+import {compose} from 'redux';
 import {connect} from 'react-redux';
-import { addSession } from '../../Actions/sessionActions';
+import {addSession} from '../../Actions/sessionActions';
+import {getSession} from '../../Actions/sessionActions';
+import {removeSession} from '../../Actions/sessionActions';
+import {getCurrentMatch, setAllMatches} from '../../Actions/matchActions';
 import Nav from '../Nav';
 
 //returns a function withAuth
@@ -14,47 +17,74 @@ const withAuth = (OriginalComponent) => {
             }
         }
         
-        componentDidMount(){
-            console.log("component did moutn auth");
-            const { socket, addSession } = this.props;
+        async componentDidMount(){
+            const { socket,addSession, getSession, getCurrentMatch, setAllMatches, matchState } = this.props;
+            await getSession();
+            const { session } = this.props
+            const { username, userID, sessionID } = session;
             socket.on('session',  session => {
-                console.log("adding session auth didmount");
                 addSession(session);
             })
-            const sId = localStorage.getItem('s.id');
-            const uId = localStorage.getItem('u.id');
-            const username = localStorage.getItem('u.name');
-            console.log("sid: ", sId);
             const { history, match } = this.props;
             
             //redirect if no session in place
-            if(sId === null && match.path === "/dashboard"){
-                console.log(this.props);
+            if(sessionID === null && match.path === "/dashboard"){
                 history.replace("/");
             }
 
             //setup connection
             else{
                 const { socket, addSession} = this.props;
-                socket.auth={username: username, sessionID: sId, userID: uId }
+                socket.auth={username: username, sessionID: sessionID, userID: userID }
                 socket.connect();
                 socket.on('session', session => {
-                    console.log("adding session auth");
                     addSession(session);
                 })
                 this.setState({render: true})
             }
-           
+
+        // socket.emit('matches');
+        // socket.on('matches', async matches => {
+        //     await setAllMatches(matches.filter((m) => this.matchContainsUser(m)));
+        //     // this.setState({matches: matches.filter((m) => this.matchContainsUser(m))})
+        // })
+
+        // if(match.params.matchId){
+        //     await getCurrentMatch(match.params.matchId);
+        // }
+
+        // socket.on('new_match', async match => {
+        //     if(this.matchContainsUser(match)){
+        //         await setAllMatches([...matchState.matches, match]);
+        //         // await getCurrentMatch(match.matchId);
+        //     }
+        // })
         }
+    
+        componentWillUnmount(){
+            const { socket } = this.props;
+            socket.off('session');            
+        }
+
+        matchContainsUser(match){
+            const { session } = this.props;
+            const {username } = session;
+            if(match.participants[0].username === username || match.participants[1].username === username ){
+                return true;
+            }
+            return false;
+        }
+
         render(){
-            console.log("auth: ", this.state);
             if(!this.state.render){
                 return ( <React.Fragment></React.Fragment> )
             }
             else{
                 return(<React.Fragment> 
                     <Nav {...this.props} /> 
+                    {/* <Nav />  */}
                     <OriginalComponent {...this.props} /> 
+                    {/* <OriginalComponent  history ={this.props.history}/>  */}
                 </React.Fragment>
                 )
             }
@@ -68,10 +98,10 @@ const withAuth = (OriginalComponent) => {
 // )
 
 // export default withAuthHoc;
-const mapStateToProps = ({ socket, session }) => ({ socket, session });
+const mapStateToProps = ({ socket, session, matchState }) => ({ socket, session, matchState });
 
 const cmposedAuth = compose(
-    connect(mapStateToProps, { addSession }),withAuth
+    connect(mapStateToProps, { addSession, getSession, removeSession, setAllMatches }),withAuth
 )
 export default cmposedAuth;
 // export default connect(mapStateToProps)(withAuth);

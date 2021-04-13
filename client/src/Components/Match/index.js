@@ -1,6 +1,8 @@
 import React from 'react';
 import withAuth from '../Authorization';
 import Board from '../Board';
+import UserModal from '../Modal';
+import styles from './styles.module.css';
 class Match extends React.Component{
     constructor(props) {
         super(props);
@@ -11,15 +13,14 @@ class Match extends React.Component{
             win: false,
             draw: false,
             lose: false,
+            isOpen: false,
         }
     }
 
-    componentDidMount(){
-        console.log("match: ",this.props);
+    async componentDidMount(){
         const { socket, match } = this.props;
         socket.emit('ready', match.params.matchId )
         socket.on('assign_symbol', symbol => {
-            console.log("symbol: ", symbol);
             if(symbol === 'X'){
                 this.setState({myTurn: true});
             }
@@ -27,13 +28,10 @@ class Match extends React.Component{
         })
 
         socket.on('game_move', (symbol, idx) => {
-            console.log("recv game_move: ", symbol, idx);
             const symbolState = this.state.symbol;
             let { win, lose, draw } = this.state;
             let myTurn = false;
-            console.log("win, lose draw", win, lose,draw);
                 if(symbol !== symbolState){
-                    console.log("setNewSymbol", this.state);
                     let copyBoard = [...this.state.board];
                     copyBoard[idx] = symbol;
                     if(win === false && lose ===false && draw ===false){
@@ -58,6 +56,7 @@ class Match extends React.Component{
                     this.setState({lose: true, myTurn: false})
                 }
             }
+            this.setState({isOpen: true})
         })
     }
 
@@ -67,12 +66,20 @@ class Match extends React.Component{
         socket.off('game_move')
         socket.off('match_ended')
     }
+
+    matchContainsUser(match){
+        const { session } = this.props;
+        const {username } = session;
+        if(match.participants[0].username === username || match.participants[1].username === username ){
+            return true;
+        }
+        return false;
+    }
     
     //game logic
     isGameWinningMove(board){
         const {symbol } = this.state;
         for(let i = 0; i < board.length /3 ; i++){
-            console.log("i: ", i);
             if(board[i] === symbol){
                 if(i === 0){
                     if((board[i] === board[i+4]) &&(board[i + 4] === board[i+8])){ //dioganal left right, top down
@@ -90,15 +97,14 @@ class Match extends React.Component{
                     console.log("is winning move");
                     return true;
                 }
-                let j = i + i + i;
+            }
+            let j = i + i + i;
                 if(board[j]===symbol){
-                    console.log("j: ", board[j], board[j+1], board[j+2], board[j] === (board[j+1] === board[j+2]) );
                     if((board[j] === board[j+1]) && (board[j+1] === board[j+2])){ //left to right
                         console.log("is winning move");
                         return true;
                     }
                 }
-            }
         }
         return false;
     }
@@ -107,7 +113,6 @@ class Match extends React.Component{
     isDraw(board){
         const { symbol } = this.state;
         const other = (symbol === 'O') ? "X": 'O';
-        console.log("other: ",other);
         for(let i = 0; i < board.length; i++){
             if(board[i] !== symbol && board[i] !==other){
                 return false;
@@ -118,28 +123,36 @@ class Match extends React.Component{
     }
 
     select(index){
-        console.log("select: ", index);
         const { socket, match } = this.props;
         const { symbol, myTurn } = this.state;
         if(myTurn){
             let copyBoard = [...this.state.board];
             copyBoard[index] = symbol;
-            console.log("draw?: ", this.isDraw(copyBoard));
             this.setState({board: copyBoard, myTurn: false })
             socket.emit('game_move', match.params.matchId, symbol, index, this.isGameWinningMove(copyBoard), this.isDraw(copyBoard))
         }
     }
     
+    openModal(status){
+            this.setState({isOpen: status})
+    }
+    
     render(){
         const{ board, myTurn, win, draw, lose, symbol } = this.state;
-        console.log("state: ", this.state);
-
+        const { history } = this.props;
         return(
             <div>
-                {win && <div>you win!</div> }
-                {draw && <div>its a draw!</div> }
-                {lose && <div>you lose!</div> }
-                <Board myTurn={myTurn} symbol={symbol} board={board} select={(index) => this.select(index)}/>
+                {win && <div className={styles["GameOver"]} >you win!</div> }
+                {draw && <div className={styles["GameOver"]} >its a draw!</div> }
+                {lose && <div className={styles["GameOver"]} >you lose!</div> }
+                <Board myTurn={myTurn} symbol={symbol} gameOver={draw || lose || win} board={board} select={(index) => this.select(index)}/>
+                <UserModal isOpen={this.state.isOpen} closeModel={() => this.openModal(false)} >
+                    {win && <div>you win!</div> }
+                    {draw &&<div>its a draw!</div> }
+                    {lose &&<div >you lose!</div> }
+                    <div>Game Over!</div>
+                    <button onClick={() => history.push("/dashboard")}>Go back to dashboard</button>
+                </UserModal>
             </div>
         )
     }

@@ -14,15 +14,12 @@ class Users extends React.Component{
     }
 
     componentDidMount(){
-        console.log("users component: ", this.props);
         const { socket } = this.props;
         socket.on('game_challenge', challenge => {
-            console.log("got a challenge from: ...", challenge.challenger);
             const { challenger } = challenge;
             let index = this.state.challenges.findIndex(c => c.userID === challenger.userID);
             if(index < 0){
                 this.setState({ challenges: [...this.state.challenges, challenger] })
-                console.log("state", this.state);
             }
         })
     }
@@ -35,7 +32,6 @@ class Users extends React.Component{
     challenge(userID){
         const { socket } = this.props;
         socket.emit('game_challenge', userID);
-        console.log("sending challange to: ", userID);
     }
 
     accept(accept, userID){
@@ -43,14 +39,11 @@ class Users extends React.Component{
         const matchID = uuid();
         this.setState({challenges: this.state.challenges.filter(c => c.userID !== userID)})
         if(accept){
-            console.log("userID", userID);
             socket.emit('game_challenge_accepted', matchID, userID);
-            console.log("challenge accepted to: ", userID);
             history.push(`match/${matchID}`);
             return;
         }
         socket.emit('game_challenge_declined', (userID));
-        console.log("challenge declined to: ", userID);
         return;
     }
 
@@ -73,7 +66,7 @@ class Users extends React.Component{
     render(){
         const { users, username } = this.props;
         const { challenges } = this.state;
-        console.log("users", users, "username: ",username);
+        console.log("users: ", users);
         users.sort((a, b) => this.compare(a,b))
         //sort by online then username
         

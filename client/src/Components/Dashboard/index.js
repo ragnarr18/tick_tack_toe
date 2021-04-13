@@ -10,14 +10,14 @@ class Dashboard extends React.Component{
         super(props);
         this.state = {
             users: [],
-            matches: [],
             challengeDeclined: false,
+            challengeAccepted: false,
         }
     }
 
     componentDidMount(){
-        console.log("mount: ",this.props);
-        const { socket, history } = this.props;
+        const { socket, history, getCurrentMatch, setAllMatches ,matchState } = this.props;
+        this.setState({matches: matchState.matches})
         socket.emit('users');
         socket.on('users', users => {
             this.setState({users: users})
@@ -25,7 +25,6 @@ class Dashboard extends React.Component{
 
         socket.on('connected_user', user => {
             let index = this.state.users.findIndex(u => u.userID === user.userID);
-            console.log("connected: ", user, index);
             if(index >= 0){
                 let copyUsers = [...this.state.users];
                 let currentUser = {...copyUsers[index]};
@@ -52,27 +51,33 @@ class Dashboard extends React.Component{
         })
 
         socket.emit('matches');
-        socket.on('matches', matches => {
-            console.log("matches: ", matches);
-            this.setState({matches: matches.filter((m) => this.matchContainsUser(m))})
+        socket.on('matches', async matches => {
+            console.log("the matches: ", matches);
+            await setAllMatches(matches);
+            // this.setState({matches: matches.filter((m) => this.matchContainsUser(m))})
         })
 
-        socket.on('new_match', match => {
-            console.log("new match!: ", match);
-            if(this.matchContainsUser(match)){
-                this.setState({ matches: [...this.state.matches, match]})
-            }
+        socket.on('new_match', async match => {
+            // if(this.matchContainsUser(match)){
+                console.log([...matchState.matches, match]);
+                await setAllMatches([...matchState.matches, match]);
+                // await getCurrentMatch(match.matchId);
+            // }
         })
 
         socket.on('game_challenge_declined', (fromUser) => {
-            console.log("declined sorry");
             this.setState({challengeDeclined: true})
             
         })
 
-        socket.on('game_challenge_accepted', (matchId, fromUser) => {
-            console.log("push");
+        socket.on('game_challenge_accepted', async(matchId, fromUser) => {
+            this.setState({challengeAccepted: true})
+            await this.sleep(2000);
             history.push(`match/${matchId}`);
+        })
+
+        socket.on('match_ended', (matchID)=>{
+            socket.emit('matches');
         })
     }
 
@@ -86,31 +91,29 @@ class Dashboard extends React.Component{
         socket.off('user_left');
         socket.off('matches');
         socket.off('session');
-        console.log("unmount, ",this.props);
     }
 
-    matchContainsUser(match){
-        const { session } = this.props;
-        const {username } = session;
-        if(match.participants[0].username === username || match.participants[1].username === username ){
-            return true;
-        }
-        return false;
+    sleep(ms){
+        return new Promise(resolve => setTimeout(resolve, ms))
     }
     
     render(){
-        const { users, matches, challengeDeclined } = this.state;
-        const { session, history } = this.props;
+        const { users, challengeDeclined, challengeAccepted } = this.state;
+        const { session, history, matchState } = this.props;
         const { username } = session;
         return(
             <div className={styles["container"]}>
                 {/* <div>DASHBOARD!</div> */}
                 <Users users={users} username={username} history={history} />
-                <Matches matches={matches} username={username}  history={history} />
+                <Matches matches={matchState.matches} username={username}  history={history} />
                 {challengeDeclined &&
                     <UserModal isOpen={this.state.challengeDeclined} closeModel={() => this.setState({challengeDeclined: !challengeDeclined})} >
                     <div>Challenge was declined</div>
                     </UserModal>}
+                {challengeAccepted &&
+                <UserModal isOpen={this.state.challengeAccepted} closeModel={() => this.setState({challengeAccepted: !challengeAccepted})} >
+                <div>Challenge was accepted you will be redirected shortly, have fun!</div>
+                </UserModal>}
             </div>
         )
     }

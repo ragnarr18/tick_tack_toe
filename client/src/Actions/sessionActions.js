@@ -9,3 +9,8 @@ export const removeSession = () => ({
     type: constants.REMOVE_SESSION,
     payload: {},  
 })
+
+export const getSession = () => ({
+    type: constants.GET_SESSION,
+    payload: {},
+})
