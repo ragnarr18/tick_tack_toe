@@ -9,7 +9,7 @@ To run the program:
 
 ### Server
 
-  cd ./serve/
+  cd ./server/
   
   npm install
   
