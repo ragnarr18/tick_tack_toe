@@ -16,7 +16,7 @@ class Dashboard extends React.Component{
     }
 
     componentDidMount(){
-        const { socket, history, getCurrentMatch, setAllMatches ,matchState } = this.props;
+        const { socket, history, setAllMatches ,matchState } = this.props;
         this.setState({matches: matchState.matches})
         socket.emit('users');
         socket.on('users', users => {

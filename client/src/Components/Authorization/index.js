@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {addSession} from '../../Actions/sessionActions';
 import {getSession} from '../../Actions/sessionActions';
 import {removeSession} from '../../Actions/sessionActions';
-import {getCurrentMatch, setAllMatches} from '../../Actions/matchActions';
+import {setAllMatches} from '../../Actions/matchActions';
 import Nav from '../Nav';
 
 //returns a function withAuth
@@ -18,7 +18,7 @@ const withAuth = (OriginalComponent) => {
         }
         
         async componentDidMount(){
-            const { socket,addSession, getSession, getCurrentMatch, setAllMatches, matchState } = this.props;
+            const { socket,addSession, getSession } = this.props;
             await getSession();
             const { session } = this.props
             const { username, userID, sessionID } = session;
