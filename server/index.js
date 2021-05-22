@@ -1,4 +1,7 @@
-const httpServer = require("http").createServer();
+const httpServer = require("http").createServer((req, res) => {
+  res.write('Hello World!'); //write a response to the client
+  res.end(); //end the response
+});
 const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(16).toString("hex");
 const PORT = process.env.PORT || 8080;
