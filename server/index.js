@@ -1,9 +1,10 @@
 const httpServer = require("http").createServer();
 const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(16).toString("hex");
+const PORT = process.env.PORT || 8080;
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3001",
   },
 });
 
@@ -215,4 +216,4 @@ io.on('connection', socket => {
 
 });
 
-httpServer.listen(8080);
+httpServer.listen(PORT);
