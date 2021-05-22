@@ -3,9 +3,9 @@ const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(16).toString("hex");
 const PORT = process.env.PORT || 8080;
 const io = require("socket.io")(httpServer, {
-  cors: {
-    origin: "http://localhost:3001",
-  },
+  // cors: {
+  //   origin: "http://localhost:3001",
+  // },
 });
 
 // Session store
