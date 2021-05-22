@@ -4,7 +4,8 @@ const randomId = () => crypto.randomBytes(16).toString("hex");
 const PORT = process.env.PORT || 8080;
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "https://sleepy-pasteur-f53d2b.netlify.app/",
+    // origin: "https://sleepy-pasteur-f53d2b.netlify.app/",
+    origin: '*',
   },
 });
 
