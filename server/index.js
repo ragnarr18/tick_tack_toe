@@ -3,9 +3,9 @@ const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(16).toString("hex");
 const PORT = process.env.PORT || 8080;
 const io = require("socket.io")(httpServer, {
-  // cors: {
-  //   origin: "http://localhost:3001",
-  // },
+  cors: {
+    origin: "https://sleepy-pasteur-f53d2b.netlify.app/",
+  },
 });
 
 // Session store
@@ -215,5 +215,4 @@ io.on('connection', socket => {
   });
 
 });
-
 httpServer.listen(PORT);
